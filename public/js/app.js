@@ -1917,6 +1917,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -1925,8 +1934,7 @@ __webpack_require__.r(__webpack_exports__);
       formData: {
         email: "",
         password: ""
-      },
-      formErrors: []
+      }
     };
   },
   methods: {
@@ -1934,19 +1942,21 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       // send axios request to the login route
-      //   console.log(this.formData.email);
-      //   console.log(this.formData.password);
       axios.get("".concat(this.baseUrl, "/sanctum/csrf-cookie")).then(function (response) {
-        axios.post("".concat(_this.baseUrl, "/login"), _this.formData).then(function (response) {
-          _this.getSecrets();
+        axios.post("".concat(_this.baseUrl, "/login"), _this.formData).then(function (response) {// this.getSecrets();
         })["catch"](function (err) {
           return alert(err.response.data.errors.email);
         });
       });
     },
     getSecrets: function getSecrets() {
-      axios("".concat(this.baseUrl, "/api/secrets")).then(function (response) {
+      var _this2 = this;
+
+      axios.get("".concat(this.baseUrl, "/api/secrets")).then(function (response) {
         console.log(response);
+        _this2.secrets = response.data;
+      })["catch"](function (err) {
+        return alert(err.response.data.errors.error);
       });
     }
   }
@@ -38070,7 +38080,29 @@ var render = function() {
           ]
         )
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _vm.secrets.length
+      ? _c("div", { staticClass: "row mt-4" }, [
+          _c(
+            "div",
+            { staticClass: "col-6 offset-3" },
+            _vm._l(_vm.secrets, function(secret, index) {
+              return _c("div", { key: index, staticClass: "secret" }, [
+                _c("em", {
+                  domProps: { textContent: _vm._s(secret.created_at) }
+                }),
+                _c("br"),
+                _vm._v(" "),
+                _c("strong", {
+                  domProps: { textContent: _vm._s(secret.secret) }
+                })
+              ])
+            }),
+            0
+          )
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = [

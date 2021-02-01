@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 
 class SecretController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Secret::all();
+        if (!$request->user()) {
+            return response()->json(['error' => 'User does not exist'], 500);
+        }
+
+        return $request->user()->secrets;
     }
 }

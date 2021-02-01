@@ -32,6 +32,15 @@
       </div>
     </div>
     <!-- secrets list -->
+
+    <div class="row mt-4" v-if="secrets.length">
+      <div class="col-6 offset-3">
+        <div class="secret" v-for="(secret, index) in secrets" :key="index">
+          <em v-text="secret.created_at"></em><br />
+          <strong v-text="secret.secret"></strong>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -45,28 +54,28 @@ export default {
         email: "",
         password: "",
       },
-      formErrors: [],
     };
   },
   methods: {
     handleLogin() {
       // send axios request to the login route
-
-      //   console.log(this.formData.email);
-      //   console.log(this.formData.password);
       axios.get(`${this.baseUrl}/sanctum/csrf-cookie`).then((response) => {
         axios
           .post(`${this.baseUrl}/login`, this.formData)
           .then((response) => {
-            this.getSecrets();
+            // this.getSecrets();
           })
           .catch((err) => alert(err.response.data.errors.email));
       });
     },
     getSecrets() {
-      axios(`${this.baseUrl}/api/secrets`).then((response) => {
-        console.log(response);
-      });
+      axios
+        .get(`${this.baseUrl}/api/secrets`)
+        .then((response) => {
+          console.log(response);
+          this.secrets = response.data;
+        })
+        .catch((err) => alert(err.response.data.errors.error));
     },
   },
 };
